@@ -66,3 +66,72 @@ let appCuenta = {
 		}
 	}
 }
+
+let appCuentaT = {
+	template: "#vistaCuentaT",
+	data: function () {
+		return {
+			form:{
+				id_cuenta: null,
+				alias: null
+			},
+			vistaCuentaT:true,
+			cuentas:[],
+			editar:false,
+			cuentaEditar:null			
+		}
+	},
+	mounted: function () {
+		this.getCuentasT()
+	},
+	methods: {
+		getCuentasT(){
+			fetch('/api/cuentast')
+			.then(res => res.json())
+			.then(data => {
+				this.cuentast = data
+			})
+		},
+		editarCuentaT(cuentaId) {
+			fetch('/api/cuentast/editar/' + cuentaId)
+			.then(res => res.json())
+			.then(data => {
+				this.form         = data
+				this.cuentaEditar = data._id
+				this.editar       = true
+			});
+		},
+		guardarCuentaT(){
+			if (this.editar === false) {
+				fetch("/api/cuentas", {
+					method: "POST",
+					body: JSON.stringify(this.form),
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json"
+					}
+				})
+				.then(res => res.json())
+				.then(data => {
+					this.getCuentasT();
+					this.form = [];
+				})
+			} else {
+				fetch("/api/cuentast/editar/" + this.cuentaEditar, {
+					method: "PUT",
+					body: JSON.stringify(this.form),
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json"
+					}
+				})
+				.then(res => res.json())
+				.then(data => {
+					this.getCuentasT()
+					this.form = []
+					this.edit = false
+				});
+			}
+		}
+	}
+}

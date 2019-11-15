@@ -17,15 +17,21 @@
 					<li class="nav-item active">
 						<a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
 					</li>
+					
 					<li class="nav-item">
 						<a class="nav-link" href="javascript:;" @click="cuentas">Cuenta</a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link" href="javascript:;" @click="cuentast">Cuenta Terceros</a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link" href="javascript:;">Transferencia</a>
 					</li>
+
 				</ul>
 			</div>
 		</nav>
+
 		<main role="main" class="bd-content p-5 my-3" style="margin-top: 5%;">
 			<!-- Formulario de cuentas -->
 			<v-cuenta v-if="vistaCuenta === true"></v-cuenta>
@@ -67,7 +73,7 @@
 							<thead>
 								<tr>
 									<th>#</th>
-									<th>Nombre de uenta</th>
+									<th>Nombre de cuenta</th>
 									<th>Numero de cuenta</th>
 								</tr>
 							</thead>
@@ -87,6 +93,43 @@
 		</div>
 	</template>
 	<!-- fin plantilla cuenta -->
+	
+	<!-- Formulario de cuentas -->
+	<v-cuentat v-if="vistaCuentaT === true"></v-cuentat>
+	<!-- Fin formulario de cuentas -->
+</main>
+</div>
+<!-- plantilla cuenta -->
+<template id="vistaCuentaT" v-if="vistaCuentaT === true">
+<div>
+	<div class="row justify-content-md-center">
+		<div class="card col-sm-4">
+			<div class="card-body">
+				<form @submit.prevent="guardarCuenta">
+					<div class="form-group">
+						<div class="col-sm-12">
+							<label class="col-form-label-sm" for="letra">Id Cuenta</label>
+							<select v-model="form.id_cuenta" class="form-control form-control-sm">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12">
+							<label class="col-form-label-sm" for="letra">Alias</label>
+							<input type="text" v-model="form.alias" class="form-control form-control-sm">
+						</div>
+					</div>
+					<div class="col-sm-12 text-right">
+						<button class="btn btn-sm btn-info btn-block"> Guardar</button>
+					</div>
+					<br>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+</template>
+<!-- fin plantilla cuenta -->
+
 </body>
 <script src="/assets/jquery/dist/jquery.min.js"></script>
 <script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>

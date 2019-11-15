@@ -1,7 +1,7 @@
 const path    = require('path');
 const express = require('express');
-const parser  = require('body-parser');
-const cors           = require("cors")
+const parser  = require('body-parser')
+const cors    = require("cors")
 
 const app     = express();
 
@@ -17,6 +17,8 @@ app.use(cors())
 app.use(parser.json())
 
 app.use("/api/cuentas", require("./routes/cuenta"))
+app.use("/api/cuentas_tercero", require("./routes/cuenta_tercero"))
+app.use("/api/transferencia", require("./routes/transferencias"))
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/assets", express.static(path.join(__dirname, "../node_modules")))

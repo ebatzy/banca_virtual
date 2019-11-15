@@ -9,7 +9,8 @@ let appCuenta = {
 			vistaCuenta:true,
 			cuentas:[],
 			editar:false,
-			cuentaEditar:null
+			cuentaEditar:null,
+			verForm:false
 		}
 	},
 	mounted: function () {
@@ -30,6 +31,7 @@ let appCuenta = {
 				this.form         = data
 				this.cuentaEditar = data._id
 				this.editar       = true
+				this.verForm      = true
 			});
 		},
 		guardarCuenta(){
@@ -45,7 +47,8 @@ let appCuenta = {
 				.then(res => res.json())
 				.then(data => {
 					this.getCuentas();
-					this.form = [];
+					this.form    = [];
+					this.verForm = false
 				})
 			} else {
 				fetch("/api/cuentas/editar/" + this.cuentaEditar, {
@@ -59,43 +62,66 @@ let appCuenta = {
 				.then(res => res.json())
 				.then(data => {
 					this.getCuentas()
-					this.form = []
-					this.edit = false
+					this.form    = []
+					this.edit    = false
+					this.verForm = false
 				});
 			}
+		},
+		nuevaCuenta() {
+			this.form    = []
+			this.edit    = false
+			this.verForm = true
+		},
+		cerrarFormulario() {
+			this.form    = []
+			this.edit    = false
+			this.verForm = false
 		}
 	}
 }
 
-let appCuentaT = {
+let appCuentaTercero = {
 	template: "#vistaCuentaT",
 	data: function () {
 		return {
 			form:{
 				id_cuenta: null,
+				no_cuenta: null,
 				alias: null
 			},
 			vistaCuentaT:true,
-			cuentas:[],
+			cuentas_tercero:[],
 			editar:false,
-			cuentaEditar:null			
+			cuentaEditar:null,
+			verForm:false,
+			cuentas:[]
 		}
 	},
 	mounted: function () {
 		this.getCuentasT()
+		this.getCuentas()
 	},
 	methods: {
-		getCuentasT(){
-			fetch('/api/cuentast')
+		getCuentas() {
+			fetch('/api/cuentas')
 			.then(res => res.json())
 			.then(data => {
-				this.cuentast = data
+				this.cuentas = data
+			})
+		},
+		getCuentasT(){
+			fetch('/api/cuentas_tercero')
+			.then(res => res.json())
+			.then(data => {
+				this.cuentas_tercero = data
 			})
 		},
 		editarCuentaT(cuentaId) {
-			fetch('/api/cuentast/editar/' + cuentaId)
+			fetch('/api/cuentas_tercero/editar/' + cuentaId)
 			.then(res => res.json())
 			.then(data => {
+				this.verForm      = true
 				this.form         = data
 				this.cuentaEditar = data._id
 				this.editar       = true
@@ -103,7 +129,7 @@ let appCuentaT = {
 		},
 		guardarCuentaT(){
 			if (this.editar === false) {
-				fetch("/api/cuentas", {
+				fetch("/api/cuentas_tercero", {
 					method: "POST",
 					body: JSON.stringify(this.form),
 					headers: {
@@ -113,11 +139,13 @@ let appCuentaT = {
 				})
 				.then(res => res.json())
 				.then(data => {
+					console.log(data)
 					this.getCuentasT();
-					this.form = [];
+					this.form    = []
+					this.verForm = false
 				})
 			} else {
-				fetch("/api/cuentast/editar/" + this.cuentaEditar, {
+				fetch("/api/cuentas_tercero/editar/" + this.cuentaEditar, {
 					method: "PUT",
 					body: JSON.stringify(this.form),
 					headers: {
@@ -128,10 +156,35 @@ let appCuentaT = {
 				.then(res => res.json())
 				.then(data => {
 					this.getCuentasT()
-					this.form = []
-					this.edit = false
+					this.form    = []
+					this.edit    = false
+					this.verForm = false
 				});
+			}
+		},
+		nuevaCuenta() {
+			this.form    = []
+			this.edit    = false
+			this.verForm = true
+		},
+		cerrarFormulario() {
+			this.form    = []
+			this.edit    = false
+			this.verForm = false
+		}
+	}
+}
+
+let appTransferencia = {
+	template: "#vistaTransferencia",
+	data: function () {
+		return {
+			form: {
+				id_cuenta: null,
+				cuenta_destino: null,
+				monto: 0
 			}
 		}
 	}
+
 }

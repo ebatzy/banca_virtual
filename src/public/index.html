@@ -17,17 +17,15 @@
 					<li class="nav-item active">
 						<a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
 					</li>
-					
 					<li class="nav-item">
 						<a class="nav-link" href="javascript:;" @click="cuentas">Cuenta</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="javascript:;" @click="cuentast">Cuenta Terceros</a>
+						<a class="nav-link" href="javascript:;" @click="cuentastercero">Cuenta Terceros</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="javascript:;">Transferencia</a>
+						<a class="nav-link" href="javascript:;" @click="tranferencia">Transferencia</a>
 					</li>
-
 				</ul>
 			</div>
 		</nav>
@@ -36,29 +34,39 @@
 			<!-- Formulario de cuentas -->
 			<v-cuenta v-if="vistaCuenta === true"></v-cuenta>
 			<!-- Fin formulario de cuentas -->
+
+			<!-- Formulario de cuentas tercero -->
+			<v-cuentat v-if="vistaCuentaT === true"></v-cuentat>
+			<!-- Fin formulario de cuentas tercero -->
+
+			<!-- Formulario de tranferencias -->
+			<v-transferencia v-if="vistaTransferencia === true"></v-transferencia>
+			<!-- Fin formulario de transferecias -->
 		</main>
 	</div>
-	<!-- plantilla cuenta -->
+	<!-- plantilla cuenta terceros -->
 	<template id="vistaCuenta" v-if="vistaCuenta === true">
 		<div>
-			<div class="row justify-content-md-center">
+			<h4>Cuentas <button type="button" class="btn btn-sm btn-dark" @click="nuevaCuenta">Nuevo</button></h4>
+			<div class="row justify-content-md-center" v-if="verForm === true">
 				<div class="card col-sm-4">
 					<div class="card-body">
 						<form @submit.prevent="guardarCuenta">
 							<div class="form-group">
 								<div class="col-sm-12">
 									<label class="col-form-label-sm" for="letra">Nombre</label>
-									<input type="text" v-model="form.nombre_cuenta" class="form-control form-control-sm">
+									<input type="text" v-model="form.nombre_cuenta" class="form-control form-control-sm" required>
 								</div>
 							</div>
 							<div class="form-group">
 								<div class="col-sm-12">
 									<label class="col-form-label-sm" for="letra">Numero</label>
-									<input type="text" v-model="form.no_cuenta" class="form-control form-control-sm">
+									<input type="text" v-model="form.no_cuenta" class="form-control form-control-sm" required>
 								</div>
 							</div>
 							<div class="col-sm-12 text-right">
 								<button class="btn btn-sm btn-info btn-block"> Guardar</button>
+								<button type="button" @click="cerrarFormulario" class="btn btn-sm btn-secondary btn-block"> Cancelar</button>
 							</div>
 							<br>
 						</form>
@@ -80,7 +88,7 @@
 							<tbody>
 								<tr v-for="cuenta of cuentas">
 									<td>
-										<button class="btn btn-xs btn-primary" @click="editarCuenta(cuenta._id)">Editar</button>
+										<button class="btn btn-sm btn-primary" @click="editarCuenta(cuenta._id)">Editar</button>
 									</td>
 									<td>{{cuenta.nombre_cuenta}}</td>
 									<td>{{cuenta.no_cuenta}}</td>
@@ -92,43 +100,81 @@
 			</div>
 		</div>
 	</template>
-	<!-- fin plantilla cuenta -->
-	
-	<!-- Formulario de cuentas -->
-	<v-cuentat v-if="vistaCuentaT === true"></v-cuentat>
-	<!-- Fin formulario de cuentas -->
-</main>
-</div>
-<!-- plantilla cuenta -->
-<template id="vistaCuentaT" v-if="vistaCuentaT === true">
-<div>
-	<div class="row justify-content-md-center">
-		<div class="card col-sm-4">
-			<div class="card-body">
-				<form @submit.prevent="guardarCuenta">
-					<div class="form-group">
-						<div class="col-sm-12">
-							<label class="col-form-label-sm" for="letra">Id Cuenta</label>
-							<select v-model="form.id_cuenta" class="form-control form-control-sm">
-						</div>
+	<!-- fin plantilla cuenta terceros -->
+
+	<!-- plantilla cuenta -->
+	<template id="vistaCuentaT" v-if="vistaCuentaT === true">
+		<div>
+			<h4>Cuentas a Terceros <button type="button" class="btn btn-sm btn-dark pull-right" @click="nuevaCuenta">Nuevo</button></h4>
+			<div class="row justify-content-md-center" v-if="verForm === true">
+				<div class="card col-sm-4">
+					<div class="card-body">
+						<form @submit.prevent="guardarCuentaT">
+							<div class="form-group">
+								<div class="col-sm-12">
+									<label class="col-form-label-sm" for="letra">Cuenta</label>
+									<select v-model="form.id_cuenta" class="form-control form-control-sm" v-for="xcuenta of cuentas" required>
+										<option v-bind:value="xcuenta._id">{{xcuenta.nombre_cuenta }} - {{xcuenta.no_cuenta}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-12">
+									<label class="col-form-label-sm" for="letra">Numero</label>
+									<input type="text" v-model="form.no_cuenta" class="form-control form-control-sm" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-12">
+									<label class="col-form-label-sm" for="letra">Alias</label>
+									<input type="text" v-model="form.cuentaalias" class="form-control form-control-sm" required>
+								</div>
+							</div>
+							<div class="col-sm-12 text-right">
+								<button class="btn btn-sm btn-info btn-block"> Guardar</button>
+								<button type="button" @click="cerrarFormulario" class="btn btn-sm btn-secondary btn-block"> Cancelar</button>
+							</div>
+							<br>
+						</form>
 					</div>
-					<div class="form-group">
-						<div class="col-sm-12">
-							<label class="col-form-label-sm" for="letra">Alias</label>
-							<input type="text" v-model="form.alias" class="form-control form-control-sm">
-						</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Nombre de cuenta</th>
+									<th>Numero de cuenta</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="cuentat of cuentas_tercero">
+									<td>
+										<button class="btn btn-sm btn-primary" @click="editarCuenta(cuentat._id)">Editar</button>
+									</td>
+									<td>{{cuentat.alias}}</td>
+									<td>{{cuentat.no_cuenta}}</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
-					<div class="col-sm-12 text-right">
-						<button class="btn btn-sm btn-info btn-block"> Guardar</button>
-					</div>
-					<br>
-				</form>
+				</div>
 			</div>
 		</div>
-	</div>
-	
-</template>
-<!-- fin plantilla cuenta -->
+	</template>
+	<!-- fin plantilla cuenta -->
+
+	<!-- plantilla transferencia -->
+	<template id="vistaTransferencia" v-if="vistaTransferencia === true">
+		<div>
+			<h4>Transferecias</h4>
+		</div>
+	</template>
+	<!-- fin plantilla transferencia -->
 
 </body>
 <script src="/assets/jquery/dist/jquery.min.js"></script>

@@ -1,17 +1,17 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const TaskSchema = new Schema({
-  title: {
+const TransSchema = new Schema({
+  id_cuenta: {
     type: String,
     required: true
   },
-  details: {
+  cuenta_destino: {
     type: String,
     required: true
   },
-  user: {
-    type: String,
+  monto: {
+    type: Number,
     required: true
   },
   date: {
@@ -20,4 +20,4 @@ const TaskSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('tasks', TaskSchema);
+module.exports = mongoose.model("transferencia", TransSchema);

@@ -32,4 +32,12 @@ router.put('/editar/:id', async (req, res) => {
 	})
 });
 
+router.delete('/:id', async (req, res) => {
+	await Cuenta_tercero.findByIdAndRemove(req.params.id);
+	res.json({
+		status: 'Cuenta eliminada'
+	});
+});
+
+
 module.exports = router;

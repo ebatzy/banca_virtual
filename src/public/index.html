@@ -190,7 +190,7 @@
 										<tr v-for="cuentat of cuentas_tercero">
 											<td>
 												<button class="btn btn-sm btn-primary" @click="editarCuentaT(cuentat._id)"><span class="oi oi-pencil"></span></button>
-												<button class="btn btn-sm btn-danger"><span class="oi oi-trash"></span></button>
+												<button class="btn btn-sm btn-danger" @click="eliminarCuentaT(cuentat._id)"><span class="oi oi-trash"></span></button>
 											</td>
 											<td>{{cuentat.alias}}</td>
 											<td>{{cuentat.no_cuenta}}</td>

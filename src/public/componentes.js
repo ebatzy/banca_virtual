@@ -176,6 +176,21 @@ let appCuentaTercero = {
 				});
 			}
 		},
+		eliminarCuentaT(cuentaId) {
+			if (confirm("¿Desea eliminar esta cuenta?")) {
+				fetch("/api/cuentas_tercero/" + cuentaId, {
+					method: "DELETE",
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json"
+					}
+				})
+				.then(res => res.json())
+				.then(data => {
+					this.getCuentasT()
+				});
+			}
+		},
 		nuevaCuenta() {
 			this.form    = {}
 			this.editar  = false

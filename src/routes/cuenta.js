@@ -32,10 +32,10 @@ router.put('/editar/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-  await Cuenta.findByIdAndRemove(req.params.id);
-  res.json({
-    status: 'Cuenta eliminada'
-  });
+	await Cuenta.findByIdAndRemove(req.params.id);
+	res.json({
+		status: 'Cuenta eliminada'
+	});
 });
 
 

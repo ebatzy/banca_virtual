@@ -47,7 +47,7 @@ let appCuenta = {
 				.then(res => res.json())
 				.then(data => {
 					this.getCuentas();
-					this.form    = [];
+					this.form    = {}
 					this.verForm = false
 				})
 			} else {
@@ -62,19 +62,34 @@ let appCuenta = {
 				.then(res => res.json())
 				.then(data => {
 					this.getCuentas()
-					this.form    = []
+					this.form    = {}
 					this.edit    = false
 					this.verForm = false
 				});
 			}
 		},
+		eliminarCuenta(cuentaId) {
+			if (confirm("¿Desea eliminar esta cuenta?")) {
+				fetch("/api/cuentas/" + cuentaId, {
+					method: "DELETE",
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json"
+					}
+				})
+				.then(res => res.json())
+				.then(data => {
+					this.getCuentas()
+				});
+			}
+		},
 		nuevaCuenta() {
-			this.form    = []
+			this.form    = {}
 			this.edit    = false
 			this.verForm = true
 		},
 		cerrarFormulario() {
-			this.form    = []
+			this.form    = {}
 			this.edit    = false
 			this.verForm = false
 		}
@@ -91,11 +106,11 @@ let appCuentaTercero = {
 				alias: null
 			},
 			vistaCuentaT:true,
-			cuentas_tercero:[],
 			editar:false,
-			cuentaEditar:null,
+			cuentatEditar:null,
 			verForm:false,
-			cuentas:[]
+			cuentas:[],
+			cuentas_tercero:[]
 		}
 	},
 	mounted: function () {
@@ -121,10 +136,10 @@ let appCuentaTercero = {
 			fetch('/api/cuentas_tercero/editar/' + cuentaId)
 			.then(res => res.json())
 			.then(data => {
-				this.verForm      = true
-				this.form         = data
-				this.cuentaEditar = data._id
-				this.editar       = true
+				this.verForm       = true
+				this.form          = data
+				this.cuentatEditar = data._id
+				this.editar        = true
 			});
 		},
 		guardarCuentaT(){
@@ -139,13 +154,12 @@ let appCuentaTercero = {
 				})
 				.then(res => res.json())
 				.then(data => {
-					console.log(data)
 					this.getCuentasT();
-					this.form    = []
+					this.form    = {}
 					this.verForm = false
 				})
 			} else {
-				fetch("/api/cuentas_tercero/editar/" + this.cuentaEditar, {
+				fetch("/api/cuentas_tercero/editar/" + this.cuentatEditar, {
 					method: "PUT",
 					body: JSON.stringify(this.form),
 					headers: {
@@ -156,20 +170,20 @@ let appCuentaTercero = {
 				.then(res => res.json())
 				.then(data => {
 					this.getCuentasT()
-					this.form    = []
-					this.edit    = false
+					this.form    = {}
+					this.editar  = false
 					this.verForm = false
 				});
 			}
 		},
 		nuevaCuenta() {
-			this.form    = []
-			this.edit    = false
+			this.form    = {}
+			this.editar  = false
 			this.verForm = true
 		},
 		cerrarFormulario() {
-			this.form    = []
-			this.edit    = false
+			this.form    = {}
+			this.editar  = false
 			this.verForm = false
 		}
 	}
@@ -180,9 +194,111 @@ let appTransferencia = {
 	data: function () {
 		return {
 			form: {
-				id_cuenta: null,
+				id_cuenta_origen:null,
+				id_cuenta_destino:null,
+				cuenta_origen: null,
 				cuenta_destino: null,
 				monto: 0
+			},
+			transferencias:{},
+			cuentas:{},
+			cuentas_tercero:{},
+			transEditar:null,
+			editar:false,
+			verForm: false
+		}
+	},
+	mounted: function () {
+		this.getTransferencias()
+		this.getCuentas()
+		this.getCuentasTercero()
+	},
+	methods: {
+		getCuentas(){
+			fetch('/api/cuentas')
+			.then(res => res.json())
+			.then(data => {
+				this.cuentas = data
+			})
+		},
+		getCuentasTercero(){
+			fetch('/api/cuentas_tercero')
+			.then(res => res.json())
+			.then(data => {
+				this.cuentas_tercero = data
+			})
+		},
+		getTransferencias() {
+			fetch("/api/transferencia")
+			.then(res => res.json())
+			.then(data => {
+				this.transferencias = data
+			})
+		},
+		editarTransferencia(transId) {
+			fetch("api/transferencia/editar/" + transId)
+			.then(res => res.json())
+			.then(data => {
+				this.form    = data
+				this.editar  = true
+				this.verForm = true
+			})
+		},
+		guadarTransferencia() {
+			if (this.editar == false) {
+				fetch("api/transferencia", {
+					method:"POST",
+					body: JSON.stringify(this.form),
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json"
+					}
+				})
+				.then(res => res.json())
+				.then(data => {
+					this.getTransferencias()
+					this.form    = {}
+					this.editar  = false
+					this.verForm = false
+				})
+			} else {
+				fetch("/api/transferencia/editar/" + this.transEditar, {
+					method: "PUT",
+					body: JSON.stringify(this.form),
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json"
+					}
+				})
+				.then(res => res.json())
+				.then(data => {
+					this.getTransferencias()
+					this.form    = {}
+					this.editar  = false
+					this.verForm = false
+				});
+			}
+		},
+		nuevaTransferencia(){
+			this.verForm = true
+			this.editar  = false
+			this.form    = {}
+		},
+		cerrarFormulario() {
+			this.form    = {}
+			this.editar  = false
+			this.verForm = false
+		},
+		verCuenta(e) {
+			this.form.cuenta_origen = null
+			if(e.target.options.selectedIndex > -1) {
+				this.form.cuenta_origen = e.target.options[e.target.options.selectedIndex].getAttribute("cuenta")
+			}
+		},
+		verCuentaTercero(e) {
+			this.form.cuenta_destino = null
+			if(e.target.options.selectedIndex > -1) {
+				this.form.cuenta_destino = e.target.options[e.target.options.selectedIndex].getAttribute("cuenta")
 			}
 		}
 	}

@@ -12,7 +12,7 @@ mongoose.connect('mongodb://localhost:27017/banca_virtual')
   .then(() => console.log("Mongodb conectado"))
   .catch(err => console.log(err));
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 4200);
 app.use(cors())
 app.use(parser.json())
 

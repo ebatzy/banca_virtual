@@ -9,7 +9,6 @@ router.get("/", async (req, res) => {
 })
 
 router.get('/editar/:id', async (req, res) => {
-	console.log(req.body)
 	let cuenta = await Cuenta.findById(req.params.id)
 	res.json(cuenta)
 });
@@ -31,5 +30,13 @@ router.put('/editar/:id', async (req, res) => {
 		status:"Editado con exito"
 	})
 });
+
+router.delete('/:id', async (req, res) => {
+  await Cuenta.findByIdAndRemove(req.params.id);
+  res.json({
+    status: 'Cuenta eliminada'
+  });
+});
+
 
 module.exports = router;
